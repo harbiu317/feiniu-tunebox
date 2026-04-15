@@ -2,7 +2,7 @@
 
 > 聚合音乐搜索与下载工具的 **飞牛 NAS（fnOS）应用版**，基于 Go 开发，提供 Web 界面进行多平台音乐搜索、在线试听、无损下载、歌词与封面获取、歌单/专辑管理。
 
-![单曲搜索](docs/screenshots/02-song-search.png)
+![首页](docs/screenshots/01-home.png)
 
 ## 来源仓库
 
@@ -25,9 +25,11 @@
 
 ## 截图
 
-| 歌单搜索 | 单曲搜索 |
+| 首页 / 搜索源设置 | 歌单浏览 |
 |---|---|
-| ![](docs/screenshots/01-playlist-search.png) | ![](docs/screenshots/02-song-search.png) |
+| ![](docs/screenshots/01-home.png) | ![](docs/screenshots/02-playlist.png) |
+| **单曲搜索结果** | **下载设置** |
+| ![](docs/screenshots/03-song-search.png) | ![](docs/screenshots/04-settings.png) |
 
 ## 安装（飞牛 NAS）
 
