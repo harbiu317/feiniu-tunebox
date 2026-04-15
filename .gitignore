@@ -1,0 +1,36 @@
+# 构建产物
+dist/
+*.fpk
+*.exe
+*.out
+bin/
+build/
+
+# Go
+vendor/
+*.test
+*.prof
+
+# 开发辅助
+.superpowers/
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 日志与缓存
+*.log
+tmp/
+temp/
+cache/
+
+# 本地配置
+.env
+.env.local
+config.local.*
+
+# 预览 / 临时文件
+preview-settings.html

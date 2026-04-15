@@ -1,0 +1,139 @@
+{{define "modals"}}
+<div id="cookieModal" class="modal-overlay" style="z-index: 1001;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>设置</h3>
+            <div class="modal-close" onclick="document.getElementById('cookieModal').style.display='none'"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+
+        <div class="settings-tabs">
+            <div class="settings-tab active" onclick="switchSettingsTab('download', this)">下载</div>
+            <div class="settings-tab" onclick="switchSettingsTab('cookie', this)">Cookie</div>
+            <div class="settings-tab" onclick="switchSettingsTab('advanced', this)">高级</div>
+        </div>
+
+        <div class="modal-body">
+
+            <!-- 下载 Tab -->
+            <div class="stab-panel active" id="stab-download">
+                <div class="field">
+                    <label class="field-label">下载目录</label>
+                    <div class="dir-not-set" id="dirNotSet">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>尚未设置下载目录，<span class="action-link" onclick="openDirPicker()">选择已授权的文件夹</span></span>
+                    </div>
+                    <div class="dir-field" id="dirField" style="display:none;">
+                        <input type="text" class="field-input" id="setting-download-dir" readonly>
+                        <button type="button" class="dir-btn" onclick="openDirPicker()" title="重新选择"><i class="fa-solid fa-folder-open"></i></button>
+                    </div>
+                    <div id="authorizedDirList" class="dir-list" style="display:none;"></div>
+                    <p class="field-hint">在飞牛应用设置中授权文件夹后即可选择</p>
+                </div>
+
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <div class="toggle-label">直接保存到本地</div>
+                        <div class="toggle-desc">下载时直接写入上方目录，不弹浏览器下载框</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="setting-download-to-local"><span class="switch-track"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <div class="toggle-label">内嵌元数据</div>
+                        <div class="toggle-desc">下载时将封面和歌词写入音频文件（需 FFmpeg）</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="setting-embed-download"><span class="switch-track"></span></label>
+                </div>
+            </div>
+
+            <!-- Cookie Tab -->
+            <div class="stab-panel" id="stab-cookie">
+                <p class="field-hint" style="margin-bottom: 14px;">部分音源需要登录 Cookie 才能获取完整资源</p>
+                {{ range $source := .AllSources }}
+                <div class="cookie-row">
+                    <span class="cookie-label">{{ $source }}</span>
+                    <input type="text" class="field-input" id="cookie-{{$source}}" placeholder="粘贴 Cookie...">
+                </div>
+                {{ end }}
+            </div>
+
+            <!-- 高级 Tab -->
+            <div class="stab-panel" id="stab-advanced">
+                <div class="field">
+                    <label class="field-label">每页条数</label>
+                    <input type="number" class="field-input" id="setting-web-page-size" min="1" max="200" step="1" placeholder="50" style="width:100px;">
+                </div>
+                <div class="field">
+                    <label class="field-label">CLI 每页条数</label>
+                    <input type="number" class="field-input" id="setting-cli-page-size" min="1" max="200" step="1" placeholder="50" style="width:100px;">
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info"><div class="toggle-label">更换封面/背景</div></div>
+                    <label class="switch"><input type="checkbox" id="setting-vg-change-cover"><span class="switch-track"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info"><div class="toggle-label">更换音频</div></div>
+                    <label class="switch"><input type="checkbox" id="setting-vg-change-audio"><span class="switch-track"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info"><div class="toggle-label">更换歌词</div></div>
+                    <label class="switch"><input type="checkbox" id="setting-vg-change-lyric"><span class="switch-track"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info"><div class="toggle-label">导出视频</div></div>
+                    <label class="switch"><input type="checkbox" id="setting-vg-export-video"><span class="switch-track"></span></label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="document.getElementById('cookieModal').style.display='none'">取消</button>
+            <button class="btn btn-primary" onclick="saveCookies()">保存</button>
+        </div>
+    </div>
+</div>
+
+<div id="editCollectionModal" class="modal-overlay" style="z-index: 1005;">
+    <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3 id="editColTitle">新建歌单</h3>
+            <div class="modal-close" onclick="document.getElementById('editCollectionModal').style.display='none'"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="modal-body" style="padding: 20px 24px;">
+            <input type="hidden" id="editColId">
+            <div class="field">
+                <label class="field-label">歌单名称 <span style="color:#dc2626;">*</span></label>
+                <input type="text" class="field-input" id="editColName" placeholder="例如: 睡前听的歌" maxlength="30">
+            </div>
+            <div class="field">
+                <label class="field-label">描述</label>
+                <input type="text" class="field-input" id="editColDesc" placeholder="简单描述一下...">
+            </div>
+            <div class="field">
+                <label class="field-label">封面图片 (URL)</label>
+                <input type="text" class="field-input" id="editColCover" placeholder="留空则自动生成随机封面">
+            </div>
+            <button type="button" class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="saveCollection()">保存歌单</button>
+        </div>
+    </div>
+</div>
+
+<div id="addToCollectionModal" class="modal-overlay" style="z-index: 1004;">
+    <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3>收藏到我的歌单</h3>
+            <div class="modal-close" onclick="document.getElementById('addToCollectionModal').style.display='none'"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="modal-body" style="padding: 20px 24px;">
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; color: var(--text-sub);">选择或管理歌单</span>
+                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="showEditCollectionModal()">
+                    <i class="fa-solid fa-plus"></i> 新建
+                </button>
+            </div>
+            <div id="addColList"></div>
+        </div>
+    </div>
+</div>
+{{end}}

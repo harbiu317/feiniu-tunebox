@@ -1,0 +1,15 @@
+{
+    ".url": {
+        "tunebox.Application":
+        {
+            "title": "Tunebox",
+            "desc": "聚合音乐搜索下载工具",
+            "icon": "images/{0}.png",
+            "type": "url",
+            "port": "18080",
+            "protocol": "http",
+            "url": "/music",
+            "allUsers": true
+        }
+    }
+}

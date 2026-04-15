@@ -1,0 +1,17 @@
+appname         = tunebox
+version         = 1.0.0
+display_name    = Tunebox
+platform        = x86
+maintainer      = guohuiyuan
+maintainer_url  = https://github.com/guohuiyuan/go-music-dl
+distributor     = levis
+distributor_url = https://github.com/guohuiyuan/go-music-dl
+desktop_uidir   = ui
+desktop_applaunchname = tunebox.Application
+service_port    = 18080
+checkport       = false
+desc            = 聚合音乐搜索下载工具，支持网易云/QQ/酷狗/咪咕等多平台，Web界面试听与下载，支持无损FLAC、歌词封面、歌单专辑管理。
+source          = thirdparty
+os_min_version  = 1.1.8
+disable_authorization_path = false
+checksum        =

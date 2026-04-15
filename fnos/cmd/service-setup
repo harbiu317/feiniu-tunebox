@@ -1,0 +1,92 @@
+#!/bin/bash
+# Tunebox — native binary service setup
+
+APP_DIR="${TRIM_APPDEST}"
+APP_DATA_DIR="${TRIM_PKGVAR}"
+
+LOG_FILE="${APP_DATA_DIR}/${TRIM_APPNAME}.log"
+PID_FILE="${APP_DATA_DIR}/${TRIM_APPNAME}.pid"
+
+SERVICE_COMMAND="${APP_DIR}/bin/tunebox-server ${APP_DATA_DIR}"
+SVC_BACKGROUND=y
+SVC_WRITE_PID=y
+
+PORT_SAVE="${APP_DATA_DIR}/.port"
+
+# 持久化路径信息到文件，供运行时 Go 程序读取
+# TRIM_ 环境变量只在 fnOS 调用 cmd 脚本时注入，运行中的进程拿不到
+save_paths() {
+    # data-share 共享目录（config/resource 中定义，安装时自动创建）
+    if [ -n "${TRIM_DATA_SHARE_PATHS:-}" ]; then
+        echo "${TRIM_DATA_SHARE_PATHS}" > "${APP_DATA_DIR}/.share_paths"
+        install_log "Saved share paths: ${TRIM_DATA_SHARE_PATHS}"
+    fi
+    # 用户在应用设置中授权的外部目录
+    if [ -n "${TRIM_DATA_ACCESSIBLE_PATHS:-}" ]; then
+        echo "${TRIM_DATA_ACCESSIBLE_PATHS}" > "${APP_DATA_DIR}/.accessible_paths"
+        install_log "Saved accessible paths: ${TRIM_DATA_ACCESSIBLE_PATHS}"
+    fi
+}
+
+# 保存用户配置的端口号
+apply_port() {
+    local port="$1"
+    [ -z "$port" ] && return
+    echo "${port}" > "${PORT_SAVE}"
+    # 同步更新端口转发规则
+    if [ -f "${FWPORTS_FILE}" ]; then
+        sed -i "s/src\.ports=\"[^\"]*\"/src.ports=\"${port}\/tcp\"/" "${FWPORTS_FILE}"
+        sed -i "s/dst\.ports=\"[^\"]*\"/dst.ports=\"${port}\/tcp\"/" "${FWPORTS_FILE}"
+    fi
+    install_log "Applied port: ${port}"
+}
+
+service_postinst() {
+    mkdir -p "${APP_DATA_DIR}/data" 2>/dev/null || true
+    save_paths
+    # 保存安装向导中用户设置的端口
+    if [ -n "${wizard_port:-}" ]; then
+        apply_port "${wizard_port}"
+    fi
+    chmod +x "${APP_DIR}/bin/tunebox-server" 2>/dev/null || true
+    chmod +x "${APP_DIR}/bin/music-dl" 2>/dev/null || true
+}
+
+service_preupgrade() {
+    for f in .share_paths .accessible_paths .port; do
+        [ -f "${APP_DATA_DIR}/$f" ] && cp "${APP_DATA_DIR}/$f" "${APP_DATA_DIR}/${f}.bak"
+    done
+}
+
+service_restore() {
+    for f in .share_paths .accessible_paths .port; do
+        if [ -f "${APP_DATA_DIR}/${f}.bak" ]; then
+            cp "${APP_DATA_DIR}/${f}.bak" "${APP_DATA_DIR}/$f"
+            rm -f "${APP_DATA_DIR}/${f}.bak"
+        fi
+    done
+    # 升级后恢复端口转发规则
+    if [ -f "${PORT_SAVE}" ]; then
+        apply_port "$(cat "${PORT_SAVE}")"
+    fi
+    chmod +x "${APP_DIR}/bin/tunebox-server" 2>/dev/null || true
+    chmod +x "${APP_DIR}/bin/music-dl" 2>/dev/null || true
+}
+
+service_preuninst() {
+    pkill -x "music-dl" 2>/dev/null || true
+    sleep 1
+    pkill -9 -x "music-dl" 2>/dev/null || true
+}
+
+service_poststop() {
+    service_preuninst
+}
+
+service_postconfig() {
+    save_paths
+    # 配置向导中修改了端口
+    if [ -n "${wizard_port:-}" ]; then
+        apply_port "${wizard_port}"
+    fi
+}

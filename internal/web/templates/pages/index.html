@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <title>music-dl - 聚合搜索与解析</title>
+    <link rel="icon" href="{{.Root}}/icon.png" type="image/png">
+
+    <link rel="stylesheet" href="{{.Root}}/style.css">
+    <link rel="stylesheet" href="{{.Root}}/videogen.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+</head>
+<body>
+
+<div id="back-to-top" class="back-to-top" onclick="scrollToTop()">
+    <i class="fa-solid fa-arrow-up"></i>
+</div>
+
+<div class="settings-float" onclick="openCookieModal()" title="设置">
+    <i class="fa-solid fa-gear"></i>
+</div>
+
+<div class="dl-queue-float" id="dlQueueFloat" onclick="toggleDlQueue()" title="下载队列" style="display:none;">
+    <i class="fa-solid fa-list-check"></i>
+    <span class="dl-queue-badge" id="dlQueueBadge">0</span>
+</div>
+
+<div class="dl-queue-panel" id="dlQueuePanel" style="display:none;">
+    <div class="dl-queue-header">
+        <span>下载队列</span>
+        <div class="modal-close" onclick="toggleDlQueue()"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="dl-queue-list" id="dlQueueList">
+        <div class="dl-queue-empty">暂无下载任务</div>
+    </div>
+</div>
+
+<div class="container">
+    {{template "search_box" .}}
+
+    {{template "playlist_grid" .}}
+
+    {{template "song_list" .}}
+</div>
+
+{{template "modals" .}}
+
+<div id="aplayer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<script>
+    window.API_ROOT = "{{.Root}}";
+</script>
+
+<script src="{{.Root}}/app.js"></script>
+{{template "videogen_modal" .}}
+<script src="{{.Root}}/videogen.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+    "port-config": {
+        "protocol-file": "tunebox.sc"
+    },
+    "data-share": {
+        "shares": [
+            {
+                "name": "tunebox",
+                "permission": {
+                    "rw": [
+                        "tunebox"
+                    ]
+                }
+            }
+        ]
+    },
+    "systemd-unit": {
+    }
+}

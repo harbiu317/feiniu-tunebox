@@ -1,0 +1,25 @@
+[
+    {
+        "stepTitle": "Tunebox 配置",
+        "items": [
+            {
+                "type": "text",
+                "field": "wizard_port",
+                "label": "Web 访问端口",
+                "initValue": "18080",
+                "rules": [
+                    { "required": true, "message": "请输入端口号" },
+                    { "pattern": "^[0-9]+$", "message": "端口号必须为数字" }
+                ]
+            },
+            {
+                "type": "tips",
+                "helpText": "修改端口后需重启应用生效。<br>访问地址：<code>http://NAS地址:端口/music</code>"
+            },
+            {
+                "type": "tips",
+                "helpText": "<b>下载目录：</b>在上方「共享文件夹权限」标签页中授权目录后，<br>打开 Web 界面 → 设置 → 下载，即可选择已授权的文件夹作为下载位置。"
+            }
+        ]
+    }
+]

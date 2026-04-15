@@ -1,0 +1,29 @@
+[
+    {
+        "stepTitle": "Tunebox 安装设置",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "<b>Tunebox</b> — 聚合音乐搜索下载工具<br>支持网易云、QQ音乐、酷狗、酷我、咪咕、B站等多平台<br>Web 界面搜索试听、无损 FLAC、歌词封面、歌单管理"
+            },
+            {
+                "type": "text",
+                "field": "wizard_port",
+                "label": "Web 访问端口",
+                "initValue": "18080",
+                "rules": [
+                    { "required": true, "message": "请输入端口号" },
+                    { "pattern": "^[0-9]+$", "message": "端口号必须为数字" }
+                ]
+            },
+            {
+                "type": "tips",
+                "helpText": "安装完成后通过 <code>http://NAS地址:端口/music</code> 访问"
+            },
+            {
+                "type": "tips",
+                "helpText": "<b>下载目录：</b>安装完成后前往 <b>应用设置 → Tunebox → 共享文件夹权限</b> 授权目录，<br>然后在 Web 界面设置中选择下载位置。不设置则使用应用默认共享目录。"
+            }
+        ]
+    }
+]
