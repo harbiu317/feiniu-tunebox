@@ -187,6 +187,7 @@ body.batch-mode .song-card { padding-left: 10px; }
 .result-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
 
 .song-card { background: #fff; padding: 15px; border-radius: 16px; box-shadow: var(--shadow); display: flex; align-items: center; transition: all 0.2s ease; position: relative; z-index: 5; border: 2px solid transparent; }
+.song-card:has(.dl-menu.show) { z-index: 50; }
 .song-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-active); }
 .song-card.playing-active { border-color: #10b981; background: #eff3ff; transform: scale(1.01); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); }
 .song-card.selected { border-color: #10b981; background: #f7fafc; }
